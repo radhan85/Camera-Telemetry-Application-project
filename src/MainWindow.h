@@ -7,6 +7,7 @@
 #include <QMainWindow>
 #include <QPushButton>
 #include <QComboBox>
+#include <QResizeEvent>
 
 class MainWindow : public QMainWindow
 {
@@ -27,13 +28,16 @@ private:
     QLabel *resolutionLabel_ = nullptr;
     QComboBox *resolutionCombo_ = nullptr;
     QPushButton *playButton_ = nullptr;
+    QPushButton *stopButton_ = nullptr;
     QPushButton *pauseButton_ = nullptr;
     QPushButton *resumeButton_ = nullptr;
     QPushButton *forwardButton_ = nullptr;
     QPushButton *rewindButton_ = nullptr;
     CameraController camera_;
     TelemetryGenerator telemetry_;
+    QPixmap currentFrame_;
 
     void onFrame(const QImage &frame);
     void onTelemetry(const TelemetryData &data);
+    void resizeEvent(QResizeEvent *event) override;
 };

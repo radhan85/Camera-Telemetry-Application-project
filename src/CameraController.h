@@ -14,6 +14,7 @@ public:
     ~CameraController() override;
 
     bool play();
+    void stop();
     void pause();
     void resume();
     void forward(int frameCount = 5);

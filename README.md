@@ -18,16 +18,36 @@ A Qt 6 C++ desktop application that displays an OpenCV camera feed and simulated
 - CMake 3.16 or newer
 - A C++17 compiler
 
+## Controls
+
+- **Play** opens camera index 0 and starts capture.
+- **Pause** freezes the most recently displayed frame.
+- **Resume** restarts capture after pausing.
+- **Stop** releases the camera and clears the playback history.
+- **Forward** captures and displays subsequent frames.
+- **Rewind** moves backward through frames captured during the current session.
+- The resolution selector applies 640 x 480, 1280 x 720, or 1920 x 1080.
+
 ## Windows Build
 
-Configure Qt and OpenCV with CMake. Adjust the paths for your installation:
+Install Visual Studio 2022 Build Tools with **Desktop development with C++** and a
+Windows SDK. Use an MSVC-built Qt and OpenCV installation; mixing MinGW Qt with
+MSVC OpenCV libraries will not work.
 
 ```powershell
-cmake -S . -B build -G "Ninja" `
-  -DCMAKE_PREFIX_PATH="D:/Qt/6.8.3/mingw_64" `
-  -DOpenCV_DIR="D:/opencv/build"
--DCMAKE_BUILD_TYPE=Release
-cmake --build build --parallel
+cmake -S . -B build-msvc -G "Visual Studio 17 2022" -A x64 `
+  -DCMAKE_PREFIX_PATH="D:\Qt\6.8.3\msvc2022_64" `
+  -DOpenCV_DIR="D:\opencv\build\x64\vc16\lib"
+cmake --build build-msvc --config Release --parallel
 ```
 
-Run the executable from `build/CameraTelemetryApp.exe`. Ensure the Qt and OpenCV DLL directories are in `PATH`, or use Qt's deployment tool.
+For a local run, add the Qt and OpenCV runtime directories to `PATH`:
+
+```powershell
+$env:PATH = "D:\Qt\6.8.3\msvc2022_64\bin;D:\opencv\build\x64\vc16\bin;$env:PATH"
+& ".\build-msvc\Release\CameraTelemetryApp.exe"
+```
+
+In the app, click **Play** to open the default camera. Telemetry updates automatically.
+If the camera cannot be opened, close apps that may be using it and check Windows
+camera permissions.

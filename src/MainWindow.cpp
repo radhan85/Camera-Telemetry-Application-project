@@ -73,11 +73,13 @@ MainWindow::MainWindow()
 
     auto *controls = new QHBoxLayout();
     playButton_ = new QPushButton("Play");
+    stopButton_ = new QPushButton("Stop");
     pauseButton_ = new QPushButton("Pause");
     resumeButton_ = new QPushButton("Resume");
     rewindButton_ = new QPushButton("Rewind");
     forwardButton_ = new QPushButton("Forward");
     controls->addWidget(playButton_);
+    controls->addWidget(stopButton_);
     controls->addWidget(pauseButton_);
     controls->addWidget(resumeButton_);
     controls->addWidget(rewindButton_);
@@ -109,6 +111,7 @@ MainWindow::MainWindow()
     statusBar()->showMessage("Ready");
 
     connect(playButton_, &QPushButton::clicked, &camera_, &CameraController::play);
+    connect(stopButton_, &QPushButton::clicked, &camera_, &CameraController::stop);
     connect(pauseButton_, &QPushButton::clicked, &camera_, &CameraController::pause);
     connect(resumeButton_, &QPushButton::clicked, &camera_, &CameraController::resume);
     connect(forwardButton_, &QPushButton::clicked, this, [this]() { camera_.forward(5); });
@@ -133,6 +136,11 @@ MainWindow::MainWindow()
     });
     connect(&camera_, &CameraController::stateChanged, this, [this](const QString &state) {
         statusLabel_->setText("Status: " + state);
+        if (state == "Stopped") {
+            currentFrame_ = QPixmap();
+            feedLabel_->clear();
+            feedLabel_->setText("Camera feed stopped");
+        }
     });
     connect(&telemetry_, &TelemetryGenerator::telemetryUpdated, this, &MainWindow::onTelemetry);
 
@@ -141,9 +149,9 @@ MainWindow::MainWindow()
 
 void MainWindow::onFrame(const QImage &frame)
 {
-    const QPixmap pixmap = QPixmap::fromImage(frame);
-    feedLabel_->setPixmap(pixmap.scaled(feedLabel_->size(),
-                                        Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    currentFrame_ = QPixmap::fromImage(frame);
+    feedLabel_->setPixmap(currentFrame_.scaled(feedLabel_->size(),
+                                               Qt::KeepAspectRatio, Qt::SmoothTransformation));
 }
 
 void MainWindow::onTelemetry(const TelemetryData &data)
@@ -155,4 +163,13 @@ void MainWindow::onTelemetry(const TelemetryData &data)
     rpmLabel_->setText(QString::number(data.motorRpm) + " rpm");
     lastUpdateLabel_->setText("Last update: " +
                               QDateTime::currentDateTime().toString("hh:mm:ss"));
+}
+
+void MainWindow::resizeEvent(QResizeEvent *event)
+{
+    QMainWindow::resizeEvent(event);
+    if (!currentFrame_.isNull()) {
+        feedLabel_->setPixmap(currentFrame_.scaled(feedLabel_->size(),
+                                                   Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    }
 }

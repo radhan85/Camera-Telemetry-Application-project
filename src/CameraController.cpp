@@ -1,6 +1,7 @@
 #include "CameraController.h"
 
 #include <QImage>
+#include <opencv2/imgproc.hpp>
 
 namespace {
 QImage matToQImage(const cv::Mat &source)
@@ -48,6 +49,17 @@ bool CameraController::play()
     timer_.start(33);
     setPlayingState(true);
     return true;
+}
+
+void CameraController::stop()
+{
+    timer_.stop();
+    capture_.release();
+    history_.clear();
+    redoHistory_.clear();
+    lastFrame_.release();
+    playing_ = false;
+    emit stateChanged("Stopped");
 }
 
 void CameraController::pause()
