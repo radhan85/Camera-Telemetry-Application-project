@@ -1,6 +1,6 @@
-# Camera Telemetry Qt Application
+# Camera Telemetry Qt Quick Application
 
-A Qt 6 C++ desktop application that displays an OpenCV camera feed and simulated vehicle telemetry.
+A Qt 6 C++ application with a QML dashboard, OpenCV camera capture, playback controls, and simulated vehicle telemetry.
 
 ## Features
 
@@ -8,12 +8,14 @@ A Qt 6 C++ desktop application that displays an OpenCV camera feed and simulated
 - Play, pause, resume, forward, and rewind controls
 - 640x480, 1280x720, and 1920x1080 resolution selection
 - Temperature, speed, GPS position, and motor RPM telemetry every two seconds
-- Camera and telemetry implemented in separate classes
+- QML-based dashboard with reusable components
+- OpenCV frames rendered in a custom `QQuickPaintedItem`
+- Camera and telemetry implemented in separate C++ classes
 - CMake build configuration
 
 ## Requirements
 
-- Qt 6.5 or newer (`Widgets`)
+- Qt 6.5 or newer (`Quick`, `Qml`, and `QuickControls2`)
 - OpenCV 4.x
 - CMake 3.16 or newer
 - A C++17 compiler
@@ -26,6 +28,33 @@ A Qt 6 C++ desktop application that displays an OpenCV camera feed and simulated
 - **Forward** captures and displays subsequent frames.
 - **Rewind** moves backward through frames captured during the current session.
 - The resolution selector applies 640 x 480, 1280 x 720, or 1920 x 1080.
+
+Camera errors are shown in a dialog. Resolution warnings appear in the status banner and a popup.
+
+## Project structure
+
+```text
+Components/
+  qmldir
+  Theme.qml
+  SplashScreen.qml
+  MainScreen.qml
+  Camerascreen.qml
+  Controls.qml
+  Telemetrydata.qml
+include/
+  CameraController.hpp
+  TelemetryGenerator.hpp
+  VideoItem.hpp
+src/
+  main.cpp
+  CameraController.cpp
+  TelemetryGenerator.cpp
+  VideoItem.cpp
+main.qml
+resources.qrc
+CMakeLists.txt
+```
 
 ## Windows Build
 
@@ -47,6 +76,6 @@ $env:PATH = "D:\Qt\6.8.3\msvc2022_64\bin;D:\opencv\build\x64\vc16\bin;$env:PATH"
 & ".\build-msvc\Release\CameraTelemetryApp.exe"
 ```
 
-In the app, click **Play** to open the default camera. Telemetry updates automatically.
+In the app, the splash screen transitions to the telemetry dashboard. Click **Play** to open the default camera. Telemetry updates every two seconds.
 If the camera cannot be opened, close apps that may be using it and check Windows
 camera permissions.

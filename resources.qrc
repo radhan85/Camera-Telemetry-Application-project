@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>Components/qmldir</file>
+        <file>Components/Theme.qml</file>
+        <file>Components/SplashScreen.qml</file>
+        <file>Components/MainScreen.qml</file>
+        <file>Components/Camerascreen.qml</file>
+        <file>Components/Controls.qml</file>
+        <file>Components/Telemetrydata.qml</file>
+    </qresource>
+</RCC>

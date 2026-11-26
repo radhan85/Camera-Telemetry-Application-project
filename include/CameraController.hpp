@@ -1,5 +1,7 @@
 #pragma once
 
+#include <QImage>
+#include <QList>
 #include <QObject>
 #include <QTimer>
 #include <opencv2/core.hpp>
@@ -13,6 +15,7 @@ public:
     explicit CameraController(QObject *parent = nullptr);
     ~CameraController() override;
 
+public slots:
     bool play();
     void pause();
     void resume();

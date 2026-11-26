@@ -1,0 +1,6 @@
+Theme Theme.qml
+SplashScreen SplashScreen.qml
+MainScreen MainScreen.qml
+Camerascreen Camerascreen.qml
+Controls Controls.qml
+Telemetrydata Telemetrydata.qml
