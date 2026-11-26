@@ -5,6 +5,7 @@
 #include <QGroupBox>
 #include <QHBoxLayout>
 #include <QMessageBox>
+#include <QSignalBlocker>
 #include <QSplitter>
 #include <QStatusBar>
 #include <QVBoxLayout>
@@ -27,7 +28,7 @@ MainWindow::MainWindow()
     auto *splitter = new QSplitter(Qt::Horizontal, central);
 
     auto *telemetryPanel = new QGroupBox("Telemetry", splitter);
-    telemetryPanel->setMinimumWidth(220);
+    telemetryPanel->setMinimumWidth(280);
     auto *telemetryLayout = new QVBoxLayout(telemetryPanel);
 
     auto *grid = new QWidget(telemetryPanel);
@@ -65,7 +66,7 @@ MainWindow::MainWindow()
     feedLabel_->setMinimumSize(640, 360);
     feedLabel_->setAlignment(Qt::AlignCenter);
     feedLabel_->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    feedLabel_->setStyleSheet("border: 1px solid #aab4c0; background: #f7f9fb;");
+    feedLabel_->setStyleSheet("border: 1px solid #aab4c0; background: #f7f9fb; color: #1f2937;");
     cameraLayout->addWidget(feedLabel_, 1);
 
     statusLabel_ = new QLabel("Status: Stopped");
@@ -126,6 +127,11 @@ MainWindow::MainWindow()
     connect(&camera_, &CameraController::frameReady, this, &MainWindow::onFrame);
     connect(&camera_, &CameraController::resolutionChanged, this, [this](int width, int height) {
         resolutionLabel_->setText(QString("Current resolution: %1 x %2").arg(width).arg(height));
+        const int index = resolutionCombo_->findText(QString("%1 x %2").arg(width).arg(height));
+        if (index >= 0 && index != resolutionCombo_->currentIndex()) {
+            const QSignalBlocker blocker(resolutionCombo_);
+            resolutionCombo_->setCurrentIndex(index);
+        }
     });
     connect(&camera_, &CameraController::errorOccurred, this, [this](const QString &message) {
         statusBar()->showMessage(message);
