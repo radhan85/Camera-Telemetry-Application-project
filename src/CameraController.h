@@ -14,7 +14,6 @@ public:
     ~CameraController() override;
 
     bool play();
-    void stop();
     void pause();
     void resume();
     void forward(int frameCount = 5);
@@ -24,6 +23,7 @@ public:
 signals:
     void frameReady(const QImage &frame);
     void errorOccurred(const QString &message);
+    void warningOccurred(const QString &message);
     void resolutionChanged(int width, int height);
     void stateChanged(const QString &state);
 
@@ -41,4 +41,5 @@ private:
     bool playing_ = false;
 
     void setPlayingState(bool playing);
+    void applyResolution(int requestedWidth, int requestedHeight);
 };

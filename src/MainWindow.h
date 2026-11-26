@@ -28,7 +28,6 @@ private:
     QLabel *resolutionLabel_ = nullptr;
     QComboBox *resolutionCombo_ = nullptr;
     QPushButton *playButton_ = nullptr;
-    QPushButton *stopButton_ = nullptr;
     QPushButton *pauseButton_ = nullptr;
     QPushButton *resumeButton_ = nullptr;
     QPushButton *forwardButton_ = nullptr;

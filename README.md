@@ -23,7 +23,6 @@ A Qt 6 C++ desktop application that displays an OpenCV camera feed and simulated
 - **Play** opens camera index 0 and starts capture.
 - **Pause** freezes the most recently displayed frame.
 - **Resume** restarts capture after pausing.
-- **Stop** releases the camera and clears the playback history.
 - **Forward** captures and displays subsequent frames.
 - **Rewind** moves backward through frames captured during the current session.
 - The resolution selector applies 640 x 480, 1280 x 720, or 1920 x 1080.

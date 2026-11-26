@@ -73,13 +73,11 @@ MainWindow::MainWindow()
 
     auto *controls = new QHBoxLayout();
     playButton_ = new QPushButton("Play");
-    stopButton_ = new QPushButton("Stop");
     pauseButton_ = new QPushButton("Pause");
     resumeButton_ = new QPushButton("Resume");
     rewindButton_ = new QPushButton("Rewind");
     forwardButton_ = new QPushButton("Forward");
     controls->addWidget(playButton_);
-    controls->addWidget(stopButton_);
     controls->addWidget(pauseButton_);
     controls->addWidget(resumeButton_);
     controls->addWidget(rewindButton_);
@@ -111,7 +109,6 @@ MainWindow::MainWindow()
     statusBar()->showMessage("Ready");
 
     connect(playButton_, &QPushButton::clicked, &camera_, &CameraController::play);
-    connect(stopButton_, &QPushButton::clicked, &camera_, &CameraController::stop);
     connect(pauseButton_, &QPushButton::clicked, &camera_, &CameraController::pause);
     connect(resumeButton_, &QPushButton::clicked, &camera_, &CameraController::resume);
     connect(forwardButton_, &QPushButton::clicked, this, [this]() { camera_.forward(5); });
@@ -134,13 +131,11 @@ MainWindow::MainWindow()
         statusBar()->showMessage(message);
         QMessageBox::warning(this, "Camera Error", message);
     });
+    connect(&camera_, &CameraController::warningOccurred, this, [this](const QString &message) {
+        statusBar()->showMessage(message, 5000);
+    });
     connect(&camera_, &CameraController::stateChanged, this, [this](const QString &state) {
         statusLabel_->setText("Status: " + state);
-        if (state == "Stopped") {
-            currentFrame_ = QPixmap();
-            feedLabel_->clear();
-            feedLabel_->setText("Camera feed stopped");
-        }
     });
     connect(&telemetry_, &TelemetryGenerator::telemetryUpdated, this, &MainWindow::onTelemetry);
 

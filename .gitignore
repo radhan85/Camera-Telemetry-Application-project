@@ -7,3 +7,4 @@ CMakeFiles/
 *.exe
 *.dll
 *.pdb
+*.log
